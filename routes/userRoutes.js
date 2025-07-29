@@ -7,12 +7,20 @@ const {
   validateLogin,
   validateUpdate,
   validatePasswordUpdate,
+  validateForgotPassword,
+  validateResetPassword,
+  validateOTP,
   handleValidationErrors
 } = require('../middleware/validation');
 
 // Public routes
 router.post('/register', validateRegister, handleValidationErrors, UserController.register);
 router.post('/login', validateLogin, handleValidationErrors, UserController.login);
+router.post('/forgot-password', validateForgotPassword, handleValidationErrors, UserController.forgotPassword);
+router.post('/reset-password', validateResetPassword, handleValidationErrors, UserController.resetPassword);
+router.post('/reset-password-direct', validateForgotPassword, handleValidationErrors, UserController.resetPasswordDirect);
+router.post('/send-otp', validateForgotPassword, handleValidationErrors, UserController.sendOTP);
+router.post('/verify-otp', validateOTP, handleValidationErrors, UserController.verifyOTPAndSendResetLink);
 
 // Protected routes
 router.use(auth); // Apply authentication middleware to all routes below
