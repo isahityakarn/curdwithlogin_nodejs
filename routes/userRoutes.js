@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/userController');
+const CaptchaController = require('../controllers/CaptchaController');
 const auth = require('../middleware/auth');
 const {
   validateRegister,
@@ -21,6 +22,10 @@ router.post('/reset-password', validateResetPassword, handleValidationErrors, Us
 router.post('/reset-password-direct', validateForgotPassword, handleValidationErrors, UserController.resetPasswordDirect);
 router.post('/send-otp', validateForgotPassword, handleValidationErrors, UserController.sendOTP);
 router.post('/verify-otp', validateOTP, handleValidationErrors, UserController.verifyOTPAndSendResetLink);
+
+// Captcha routes (public)
+router.post('/getCaptchaRequest', CaptchaController.getCaptchaRequest);
+router.post('/verifyCaptcha', CaptchaController.verifyCaptcha);
 
 // Protected routes
 router.use(auth); // Apply authentication middleware to all routes below

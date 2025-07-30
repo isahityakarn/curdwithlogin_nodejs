@@ -1,12 +1,14 @@
 const { createDatabase } = require('./database-setup');
 const createUsersTable = require('./001_create_users_table');
 const addPasswordResetFields = require('./002_add_password_reset_fields');
+const createCaptchasTable = require('./003_create_captchas_table');
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 const migrations = [
   createUsersTable,
-  addPasswordResetFields
+  addPasswordResetFields,
+  createCaptchasTable
 ];
 
 const runMigrations = async () => {

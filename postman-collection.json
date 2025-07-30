@@ -12,6 +12,10 @@
     {
       "key": "token",
       "value": ""
+    },
+    {
+      "key": "captcha_token",
+      "value": ""
     }
   ],
   "item": [
@@ -109,6 +113,179 @@
               "raw": "{{base_url}}/api/users/login",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Password & OTP Routes",
+      "item": [
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"reset_token_from_email\",\n  \"password\": \"NewPassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "reset-password"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password Direct",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/reset-password-direct",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "reset-password-direct"]
+            }
+          }
+        },
+        {
+          "name": "Send OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/send-otp",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "send-otp"]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/verify-otp",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "verify-otp"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Captcha Routes",
+      "item": [
+        {
+          "name": "Get Captcha Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.success && response.token) {",
+                  "        pm.environment.set('captcha_token', response.token);",
+                  "        console.log('Captcha token saved:', response.token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"captcha\": \"123456\",\n  \"browserInfo\": {\n    \"userAgent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36\",\n    \"language\": \"en-US\",\n    \"platform\": \"MacIntel\",\n    \"screenResolution\": \"1920x1080\",\n    \"timezone\": \"America/New_York\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/getCaptchaRequest",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "getCaptchaRequest"]
+            }
+          }
+        },
+        {
+          "name": "Verify Captcha",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{captcha_token}}\",\n  \"captcha\": \"123456\",\n  \"browserInfo\": {\n    \"userAgent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36\",\n    \"language\": \"en-US\",\n    \"platform\": \"MacIntel\",\n    \"screenResolution\": \"1920x1080\",\n    \"timezone\": \"America/New_York\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/verifyCaptcha",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "verifyCaptcha"]
             }
           }
         }
