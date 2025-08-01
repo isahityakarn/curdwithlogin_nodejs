@@ -183,7 +183,7 @@ class UserController {
 
       const user = await User.findByEmail(email);
       if (!user) {
-        return res.status(404).json({ error: 'User with this email not found' });
+        return res.status(404).json({ error: 'This email address is not linked to any account. Please check for typos or sign up for a new account.' });
       }
 
       const resetToken = await User.generatePasswordResetToken(email);
@@ -241,7 +241,7 @@ class UserController {
 
       const user = await User.findByEmail(email);
       if (!user) {
-        return res.status(404).json({ error: 'User with this email not found' });
+        return res.status(404).json({ error: 'This email address is not linked to any account. Please check for typos or sign up for a new account.' });
       }
 
       // Generate a random new password
@@ -284,7 +284,7 @@ class UserController {
 
       const user = await User.findByEmail(email);
       if (!user) {
-        return res.status(404).json({ error: 'User with this email not found' });
+        return res.status(404).json({ error: 'This email address is not linked to any account. Please check for typos or sign up for a new account.' });
       }
 
       const otp = await User.generateOTP(email);
