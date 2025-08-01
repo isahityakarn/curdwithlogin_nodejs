@@ -38,12 +38,12 @@ class UserController {
 
       const user = await User.findByEmail(email);
       if (!user) {
-        return res.status(401).json({ error: 'Invalid email or password' });
+        return res.status(401).json({ error: 'The email or password you entered is incorrect. Please check your credentials and try again.' });
       }
 
       const isValidPassword = await User.verifyPassword(password, user.password);
       if (!isValidPassword) {
-        return res.status(401).json({ error: 'Invalid email or password' });
+        return res.status(401).json({ error: 'The email or password you entered is incorrect. Please check your credentials and try again.' });
       }
 
       const token = jwt.sign(

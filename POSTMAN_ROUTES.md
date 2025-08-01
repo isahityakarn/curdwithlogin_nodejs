@@ -810,7 +810,7 @@ Content-Type: application/json
 **Authentication Error (401):**
 ```json
 {
-  "error": "Invalid email or password"
+  "error": "The email or password you entered is incorrect. Please check your credentials and try again."
 }
 ```
 
