@@ -356,6 +356,50 @@ class UserController {
       res.status(500).json({ error: 'Internal server error' });
     }
   }
+
+  static async resetPasswordWithQueryToken(req, res) {
+    try {
+      const { token } = req.query;
+      const { newPassword } = req.body;
+      //  return res.status(400).json({ "token": token });
+      if (!token) {
+        return res.status(400).json({ "token": 'Reset token is required as query parameter' });
+      }
+
+      if (!newPassword) {
+        return res.status(400).json({ error: 'New password is required' });
+      }
+
+      // Validate password strength
+      if (newPassword.length < 6) {
+        return res.status(400).json({ error: 'New password must be at least 6 characters long' });
+      }
+
+      // if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(newPassword)) {
+      //   return res.status(400).json({ 
+      //     error: 'New password must contain at least one lowercase letter, one uppercase letter, and one number' 
+      //   });
+      // }
+
+      const user = await User.findByResetToken(token);
+      if (!user) {
+        return res.status(400).json({ error: 'Invalid or expired reset token' });
+      }
+
+      const updated = await User.resetPasswordWithToken(token, newPassword);
+      if (!updated) {
+        return res.status(400).json({ error: 'Failed to reset password' });
+      }
+
+      res.json({ 
+        message: 'Password reset successfully',
+        success: true
+      });
+    } catch (error) {
+      console.error('Reset password with query token error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 }
 
 module.exports = UserController;

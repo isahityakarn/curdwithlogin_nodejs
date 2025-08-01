@@ -20,8 +20,9 @@ app.use('/api/users', userRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
-    message: 'CRUD API is running',
-    timestamp: new Date().toISOString()
+    message: 'CRUD API is running with auto-restart',
+    timestamp: new Date().toISOString(),
+    mode: 'development'
   });
 });
 

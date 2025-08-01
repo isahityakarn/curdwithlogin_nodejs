@@ -1,26 +1,51 @@
 {
   "info": {
-    "name": "CRUD with Login API",
-    "description": "Complete API collection for Node.js CRUD application with user authentication",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "name": "CRUD with Login API - Complete Collection",
+    "description": "Complete API collection for Node.js CRUD application with user authentication, password reset, OTP verification, and captcha verification",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "2.0.0"
   },
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost:5050"
+      "value": "http://localhost:5050",
+      "type": "string"
     },
     {
       "key": "token",
-      "value": ""
+      "value": "",
+      "type": "string"
     },
     {
       "key": "captcha_token",
-      "value": ""
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "reset_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "1",
+      "type": "string"
     }
   ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
   "item": [
     {
-      "name": "Public Routes",
+      "name": "🏠 System Routes",
+      "description": "Basic system health and information endpoints",
       "item": [
         {
           "name": "Health Check",
@@ -31,8 +56,10 @@
               "raw": "{{base_url}}/api/health",
               "host": ["{{base_url}}"],
               "path": ["api", "health"]
-            }
-          }
+            },
+            "description": "Check if the API server is running and healthy"
+          },
+          "response": []
         },
         {
           "name": "API Info",
@@ -43,9 +70,17 @@
               "raw": "{{base_url}}/",
               "host": ["{{base_url}}"],
               "path": [""]
-            }
-          }
-        },
+            },
+            "description": "Get API version and available endpoints information"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔐 Authentication Routes",
+      "description": "User registration and login endpoints",
+      "item": [
         {
           "name": "Register User",
           "event": [
@@ -55,8 +90,13 @@
                 "exec": [
                   "if (pm.response.code === 201) {",
                   "    const response = pm.response.json();",
-                  "    pm.environment.set('token', response.token);",
+                  "    pm.collectionVariables.set('token', response.token);",
+                  "    pm.collectionVariables.set('user_id', response.user.id);",
+                  "    console.log('Registration successful!');",
                   "    console.log('Token saved:', response.token);",
+                  "    console.log('User ID saved:', response.user.id);",
+                  "} else {",
+                  "    console.log('Registration failed:', pm.response.json());",
                   "}"
                 ]
               }
@@ -72,14 +112,21 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\"\n}"
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/users/register",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "register"]
-            }
-          }
+            },
+            "description": "Register a new user with name, email, and password"
+          },
+          "response": []
         },
         {
           "name": "Login User",
@@ -90,8 +137,13 @@
                 "exec": [
                   "if (pm.response.code === 200) {",
                   "    const response = pm.response.json();",
-                  "    pm.environment.set('token', response.token);",
+                  "    pm.collectionVariables.set('token', response.token);",
+                  "    pm.collectionVariables.set('user_id', response.user.id);",
+                  "    console.log('Login successful!');",
                   "    console.log('Token saved:', response.token);",
+                  "    console.log('User ID saved:', response.user.id);",
+                  "} else {",
+                  "    console.log('Login failed:', pm.response.json());",
                   "}"
                 ]
               }
@@ -107,19 +159,27 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\"\n}"
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/users/login",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "login"]
-            }
-          }
+            },
+            "description": "Login with email and password to get authentication token"
+          },
+          "response": []
         }
       ]
     },
     {
-      "name": "Password & OTP Routes",
+      "name": "🔑 Password Management",
+      "description": "Password reset and recovery endpoints",
       "item": [
         {
           "name": "Forgot Password",
@@ -133,17 +193,24 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+              "raw": "{\n  \"email\": \"john@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/users/forgot-password",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "forgot-password"]
-            }
-          }
+            },
+            "description": "Send password reset email with token to user's email"
+          },
+          "response": []
         },
         {
-          "name": "Reset Password",
+          "name": "Reset Password (with token in body)",
           "request": {
             "method": "POST",
             "header": [
@@ -154,14 +221,56 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"token\": \"reset_token_from_email\",\n  \"password\": \"NewPassword123\"\n}"
+              "raw": "{\n  \"token\": \"your_reset_token_here\",\n  \"newPassword\": \"NewPassword123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/users/reset-password",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "reset-password"]
-            }
-          }
+            },
+            "description": "Reset password using token from email (token in request body)"
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password (with token in URL)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newPassword\": \"NewPassword123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/reset-password-with-token?token=1e8ca44b232a8504fd255ca01f67c039cbf6eaa7340896ffe4317999c2185e1c",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "reset-password-with-token"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "1e8ca44b232a8504fd255ca01f67c039cbf6eaa7340896ffe4317999c2185e1c",
+                  "description": "Reset token from email URL"
+                }
+              ]
+            },
+            "description": "Reset password using token from URL query parameter (NEW ENDPOINT)"
+          },
+          "response": []
         },
         {
           "name": "Reset Password Direct",
@@ -175,15 +284,28 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+              "raw": "{\n  \"email\": \"john@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/users/reset-password-direct",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "reset-password-direct"]
-            }
-          }
-        },
+            },
+            "description": "Generate random password and send directly to user's email"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📱 OTP Verification",
+      "description": "One-Time Password verification endpoints",
+      "item": [
         {
           "name": "Send OTP",
           "request": {
@@ -196,14 +318,21 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+              "raw": "{\n  \"email\": \"john@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/users/send-otp",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "send-otp"]
-            }
-          }
+            },
+            "description": "Send OTP to user's email for verification"
+          },
+          "response": []
         },
         {
           "name": "Verify OTP",
@@ -217,19 +346,27 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"john@example.com\",\n  \"otp\": \"123456\"\n}"
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/users/verify-otp",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "verify-otp"]
-            }
-          }
+            },
+            "description": "Verify OTP and send password reset link"
+          },
+          "response": []
         }
       ]
     },
     {
-      "name": "Captcha Routes",
+      "name": "🤖 Captcha Verification",
+      "description": "Captcha generation and verification endpoints",
       "item": [
         {
           "name": "Get Captcha Request",
@@ -241,7 +378,7 @@
                   "if (pm.response.code === 200) {",
                   "    const response = pm.response.json();",
                   "    if (response.success && response.token) {",
-                  "        pm.environment.set('captcha_token', response.token);",
+                  "        pm.collectionVariables.set('captcha_token', response.token);",
                   "        console.log('Captcha token saved:', response.token);",
                   "    }",
                   "}"
@@ -259,14 +396,21 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"captcha\": \"123456\",\n  \"browserInfo\": {\n    \"userAgent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36\",\n    \"language\": \"en-US\",\n    \"platform\": \"MacIntel\",\n    \"screenResolution\": \"1920x1080\",\n    \"timezone\": \"America/New_York\"\n  }\n}"
+              "raw": "{\n  \"captcha\": \"123456\",\n  \"browserInfo\": {\n    \"userAgent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36\",\n    \"language\": \"en-US\",\n    \"platform\": \"MacIntel\",\n    \"screenResolution\": \"1920x1080\",\n    \"timezone\": \"America/New_York\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/users/getCaptchaRequest",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "getCaptchaRequest"]
-            }
-          }
+            },
+            "description": "Request captcha generation with browser information"
+          },
+          "response": []
         },
         {
           "name": "Verify Captcha",
@@ -280,105 +424,67 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"token\": \"{{captcha_token}}\",\n  \"captcha\": \"123456\",\n  \"browserInfo\": {\n    \"userAgent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36\",\n    \"language\": \"en-US\",\n    \"platform\": \"MacIntel\",\n    \"screenResolution\": \"1920x1080\",\n    \"timezone\": \"America/New_York\"\n  }\n}"
+              "raw": "{\n  \"token\": \"{{captcha_token}}\",\n  \"captcha\": \"123456\",\n  \"browserInfo\": {\n    \"userAgent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36\",\n    \"language\": \"en-US\",\n    \"platform\": \"MacIntel\",\n    \"screenResolution\": \"1920x1080\",\n    \"timezone\": \"America/New_York\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/users/verifyCaptcha",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "verifyCaptcha"]
-            }
-          }
+            },
+            "description": "Verify captcha using token and captcha value"
+          },
+          "response": []
         }
       ]
     },
     {
-      "name": "Protected Routes",
+      "name": "👤 User Profile Management",
+      "description": "Protected routes for user profile management",
       "item": [
         {
           "name": "Get User Profile",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/api/users/profile",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "profile"]
-            }
-          }
-        },
-        {
-          "name": "Get All Users",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/users",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users"]
-            }
-          }
-        },
-        {
-          "name": "Get User by ID",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/users/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "1"]
-            }
-          }
-        },
-        {
-          "name": "Update User",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"John Updated\",\n  \"email\": \"john.updated@example.com\"\n}"
             },
-            "url": {
-              "raw": "{{base_url}}/api/users/1",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "1"]
-            }
-          }
+            "description": "Get current user's profile information (requires authentication)"
+          },
+          "response": []
         },
         {
           "name": "Update Password",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
               {
                 "key": "Content-Type",
                 "value": "application/json"
@@ -386,33 +492,320 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"currentPassword\": \"Password123\",\n  \"newPassword\": \"NewPassword123\"\n}"
+              "raw": "{\n  \"currentPassword\": \"Password123\",\n  \"newPassword\": \"NewPassword123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/users/password",
               "host": ["{{base_url}}"],
               "path": ["api", "users", "password"]
-            }
-          }
+            },
+            "description": "Update user's password (requires current password)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👥 User Management (Admin)",
+      "description": "CRUD operations for user management (requires authentication)",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users"]
+            },
+            "description": "Retrieve all users (admin function)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}"]
+            },
+            "description": "Get specific user by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Updated\",\n  \"email\": \"john.updated@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}"]
+            },
+            "description": "Update user's name and email"
+          },
+          "response": []
         },
         {
           "name": "Delete User",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
+            "header": [],
             "url": {
-              "raw": "{{base_url}}/api/users/1",
+              "raw": "{{base_url}}/api/users/{{user_id}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "users", "1"]
-            }
-          }
+              "path": ["api", "users", "{{user_id}}"]
+            },
+            "description": "Delete user by ID"
+          },
+          "response": []
         }
       ]
+    },
+    {
+      "name": "🧪 Test Scenarios",
+      "description": "Common test scenarios and workflows",
+      "item": [
+        {
+          "name": "Complete Registration Flow",
+          "item": [
+            {
+              "name": "1. Register New User",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('User registration successful', function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "if (pm.response.code === 201) {",
+                      "    const response = pm.response.json();",
+                      "    pm.collectionVariables.set('token', response.token);",
+                      "    pm.collectionVariables.set('user_id', response.user.id);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test{{$randomInt}}@example.com\",\n  \"password\": \"TestPassword123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/users/register",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "register"]
+                }
+              }
+            },
+            {
+              "name": "2. Get Profile",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Profile retrieved successfully', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/users/profile",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "profile"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Password Reset Flow",
+          "item": [
+            {
+              "name": "1. Request Password Reset",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"john@example.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/users/forgot-password",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "forgot-password"]
+                }
+              }
+            },
+            {
+              "name": "2. Reset Password with Token",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"newPassword\": \"NewPassword123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/users/reset-password-with-token?token=your_token_here",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "reset-password-with-token"],
+                  "query": [
+                    {
+                      "key": "token",
+                      "value": "your_token_here",
+                      "description": "Replace with actual reset token"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global pre-request script",
+          "console.log('Making request to:', pm.request.url.toString());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test script",
+          "pm.test('Response time is less than 5000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "pm.test('Response has valid JSON', function () {",
+          "    pm.response.to.be.json;",
+          "});"
+        ]
+      }
     }
   ]
 }

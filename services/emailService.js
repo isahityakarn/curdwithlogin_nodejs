@@ -15,8 +15,8 @@ class EmailService {
   }
 
   async sendPasswordResetEmail(to, resetToken, userName) {
-    const resetUrl = `http://localhost:${process.env.PORT}/reset-password?token=${resetToken}`;
-    
+    const resetUrl = `${process.env.REACT_APP_URL}/reset-password?token=${resetToken}`;
+
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: to,

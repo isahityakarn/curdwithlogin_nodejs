@@ -18,12 +18,12 @@ const {
 router.post('/register', validateRegister, handleValidationErrors, UserController.register);
 router.post('/login', validateLogin, handleValidationErrors, UserController.login);
 router.post('/forgot-password', validateForgotPassword, handleValidationErrors, UserController.forgotPassword);
-router.post('/reset-password', validateResetPassword, handleValidationErrors, UserController.resetPassword);
-router.post('/reset-password-direct', validateForgotPassword, handleValidationErrors, UserController.resetPasswordDirect);
+// router.post('/reset-password', validateResetPassword, handleValidationErrors, UserController.resetPassword);
+router.post('/reset-password-with-token', UserController.resetPasswordWithQueryToken);
+// router.post('/reset-password-direct', validateForgotPassword, handleValidationErrors, UserController.resetPasswordDirect);
 router.post('/send-otp', validateForgotPassword, handleValidationErrors, UserController.sendOTP);
 router.post('/verify-otp', validateOTP, handleValidationErrors, UserController.verifyOTPAndSendResetLink);
 
-// Captcha routes (public)
 router.post('/getCaptchaRequest', CaptchaController.getCaptchaRequest);
 router.post('/verifyCaptcha', CaptchaController.verifyCaptcha);
 

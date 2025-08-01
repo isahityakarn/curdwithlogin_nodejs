@@ -1,0 +1,49 @@
+{
+	"id": "crud-login-environment",
+	"name": "CRUD with Login API - Environment",
+	"values": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5050",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "captcha_token",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "reset_token",
+			"value": "",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "user_id",
+			"value": "1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "test_email",
+			"value": "test@example.com",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "test_password",
+			"value": "TestPassword123",
+			"type": "secret",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment"
+}
