@@ -5,14 +5,14 @@ const emailService = require('../services/emailService');
 class UserController {
   static async register(req, res) {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password, phone_no } = req.body;
 
       const emailExists = await User.emailExists(email);
       if (emailExists) {
         return res.status(400).json({ error: 'Email already registered' });
       }
 
-      const user = new User(name, email, password);
+      const user = new User(name, email, password, phone_no);
       const userId = await user.save();
 
       const token = jwt.sign(
@@ -24,7 +24,7 @@ class UserController {
       res.status(201).json({
         message: 'User registered successfully',
         token,
-        user: { id: userId, name, email }
+        user: { id: userId, name, email, phone_no }
       });
     } catch (error) {
       console.error('Registration error:', error);
@@ -55,7 +55,7 @@ class UserController {
       res.json({
         message: 'Login successful',
         token,
-        user: { id: user.id, name: user.name, email: user.email }
+        user: { id: user.id, name: user.name, email: user.email, phone_no: user.phone_no }
       });
     } catch (error) {
       console.error('Login error:', error);
@@ -66,7 +66,16 @@ class UserController {
   static async getAllUsers(req, res) {
     try {
       const users = await User.findAll();
-      res.json({ users });
+      // Map users to include phone_no explicitly
+      const usersWithPhone = users.map(u => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        phone_no: u.phone_no,
+        created_at: u.created_at,
+        updated_at: u.updated_at
+      }));
+      res.json({ users: usersWithPhone });
     } catch (error) {
       console.error('Get users error:', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -77,14 +86,21 @@ class UserController {
     try {
       const { id } = req.params;
       const user = await User.findById(id);
-      
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
-
-      res.json({ user });
+      // Explicitly include phone_no
+      const userWithPhone = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone_no: user.phone_no,
+        created_at: user.created_at,
+        updated_at: user.updated_at
+      };
+      res.json({ user: userWithPhone });
     } catch (error) {
-      console.error('Get user error:', error);
+      console.error('Get user by ID error:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   }

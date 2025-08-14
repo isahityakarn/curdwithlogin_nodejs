@@ -30,6 +30,26 @@
       "key": "user_id",
       "value": "1",
       "type": "string"
+    },
+    {
+      "key": "state_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "trade_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "noc_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "trade_id_noc",
+      "value": "1",
+      "type": "string"
     }
   ],
   "auth": {
@@ -112,7 +132,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\"\n}",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\",\n  \"phone_no\": \"9876543210\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -124,7 +144,7 @@
               "host": ["{{base_url}}"],
               "path": ["api", "users", "register"]
             },
-            "description": "Register a new user with name, email, and password"
+            "description": "Register a new user with name, email, password, and phone_no"
           },
           "response": []
         },
@@ -627,6 +647,201 @@
       ]
     },
     {
+      "name": "🗺️ States Management",
+      "description": "CRUD operations for US states data",
+      "item": [
+        {
+          "name": "Get All States",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/states",
+              "host": ["{{base_url}}"],
+              "path": ["api", "states"]
+            },
+            "description": "Retrieve all US states with their logos"
+          },
+          "response": []
+        },
+        {
+          "name": "Get States with Pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/states?page=1&limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "states"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "5",
+                  "description": "Items per page"
+                }
+              ]
+            },
+            "description": "Get paginated list of states"
+          },
+          "response": []
+        },
+        {
+          "name": "Search States",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/states/search?q=New",
+              "host": ["{{base_url}}"],
+              "path": ["api", "states", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "New",
+                  "description": "Search term"
+                }
+              ]
+            },
+            "description": "Search states by name"
+          },
+          "response": []
+        },
+        {
+          "name": "Get State by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/states/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "states", "1"]
+            },
+            "description": "Get specific state by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get States Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/states/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "states", "stats"]
+            },
+            "description": "Get statistics about states data"
+          },
+          "response": []
+        },
+        {
+          "name": "Create New State",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"state_name\": \"Alaska\",\n  \"logo\": \"https://upload.wikimedia.org/wikipedia/commons/e/e6/Flag_of_Alaska.svg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/states",
+              "host": ["{{base_url}}"],
+              "path": ["api", "states"]
+            },
+            "description": "Create a new state (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update State",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"state_name\": \"Alaska Updated\",\n  \"logo\": \"https://upload.wikimedia.org/wikipedia/commons/e/e6/Flag_of_Alaska.svg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/states/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "states", "1"]
+            },
+            "description": "Update existing state (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete State",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/states/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "states", "1"]
+            },
+            "description": "Delete state by ID (requires authentication)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "🧪 Test Scenarios",
       "description": "Common test scenarios and workflows",
       "item": [
@@ -776,6 +991,843 @@
               }
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "Trades Management",
+      "description": "All endpoints for managing trades",
+      "item": [
+        {
+          "name": "Get All Trades",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get all trades successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('trades');",
+                  "    pm.expect(jsonData).to.have.property('total');",
+                  "    pm.expect(jsonData.trades).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/trades",
+              "host": ["{{base_url}}"],
+              "path": ["api", "trades"]
+            }
+          }
+        },
+        {
+          "name": "Get Trade by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get trade by ID successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('trade');",
+                  "    pm.expect(jsonData.trade).to.have.property('id');",
+                  "    pm.expect(jsonData.trade).to.have.property('trade_name');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/trades/{{trade_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "trades", "{{trade_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Trade",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Create trade successful', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('trade');",
+                  "    pm.expect(jsonData.trade).to.have.property('id');",
+                  "    pm.collectionVariables.set('trade_id', jsonData.trade.id);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trade_name\": \"Test Trade\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/trades",
+              "host": ["{{base_url}}"],
+              "path": ["api", "trades"]
+            }
+          }
+        },
+        {
+          "name": "Update Trade",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Update trade successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('trade');",
+                  "    pm.expect(jsonData.trade).to.have.property('trade_name');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trade_name\": \"Updated Test Trade\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/trades/{{trade_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "trades", "{{trade_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Trade",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Delete trade successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/trades/{{trade_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "trades", "{{trade_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Search Trades",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Search trades successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('trades');",
+                  "    pm.expect(jsonData).to.have.property('total');",
+                  "    pm.expect(jsonData.trades).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/trades/search?q=electrician",
+              "host": ["{{base_url}}"],
+              "path": ["api", "trades", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "electrician",
+                  "description": "Search term for trade name"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Trades Statistics",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get trades statistics successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('total_trades');",
+                  "    pm.expect(jsonData.total_trades).to.be.a('number');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/trades/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "trades", "stats"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "NOC Management",
+      "description": "All endpoints for managing NOC (No Objection Certificate) certificates",
+      "item": [
+        {
+          "name": "Get All NOC Certificates",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get all NOC certificates successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('certificates');",
+                  "    pm.expect(jsonData).to.have.property('pagination');",
+                  "    pm.expect(jsonData.certificates).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/noc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc"]
+            }
+          }
+        },
+        {
+          "name": "Get NOC Certificate by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get NOC certificate by ID successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('certificate');",
+                  "    pm.expect(jsonData.certificate).to.have.property('id');",
+                  "    pm.expect(jsonData.certificate).to.have.property('institute_name');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/noc/{{noc_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc", "{{noc_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get NOC by Application Number",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get NOC by application number successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('certificate');",
+                  "    pm.expect(jsonData.certificate).to.have.property('application_number');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/noc/application/NOC%2F2025%2FDTI%2F001",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc", "application", "NOC%2F2025%2FDTI%2F001"]
+            }
+          }
+        },
+        {
+          "name": "Create NOC Certificate",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Create NOC certificate successful', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('certificate');",
+                  "    pm.expect(jsonData.certificate).to.have.property('id');",
+                  "    pm.collectionVariables.set('noc_id', jsonData.certificate.id);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\\n  \\\"institute_name\\\": \\\"Test Technical Institute\\\",\\n  \\\"complete_address\\\": \\\"123 Test Street, Test City, Test State - 123456\\\",\\n  \\\"application_number\\\": \\\"NOC/2025/TTI/999\\\",\\n  \\\"mis_code\\\": \\\"TTI999\\\",\\n  \\\"category\\\": \\\"New ITI\\\",\\n  \\\"state_name\\\": \\\"Test State\\\",\\n  \\\"issue_date\\\": \\\"2025-08-08\\\",\\n  \\\"expiry_date\\\": \\\"2026-08-07\\\",\\n  \\\"status\\\": \\\"active\\\",\\n  \\\"remarks\\\": \\\"Test NOC certificate\\\",\\n  \\\"trades\\\": [\\n    {\\n      \\\"trade_name\\\": \\\"Electrician\\\",\\n      \\\"shift_1_units\\\": 24,\\n      \\\"shift_2_units\\\": 0\\n    }\\n  ]\\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/noc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc"]
+            }
+          }
+        },
+        {
+          "name": "Update NOC Certificate",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Update NOC certificate successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('certificate');",
+                  "    pm.expect(jsonData.certificate).to.have.property('institute_name');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\\n  \\\"institute_name\\\": \\\"Updated Test Technical Institute\\\",\\n  \\\"remarks\\\": \\\"Updated test NOC certificate\\\"\\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/noc/{{noc_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc", "{{noc_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete NOC Certificate",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Delete NOC certificate successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/noc/{{noc_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc", "{{noc_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Search NOC Certificates",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Search NOC certificates successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('certificates');",
+                  "    pm.expect(jsonData).to.have.property('query');",
+                  "    pm.expect(jsonData.certificates).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/noc/search?q=Delhi",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "Delhi",
+                  "description": "Search term for NOC certificates"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get NOC Certificates by State",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get NOC certificates by state successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('certificates');",
+                  "    pm.expect(jsonData).to.have.property('state');",
+                  "    pm.expect(jsonData.certificates).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/noc/state/Maharashtra",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc", "state", "Maharashtra"]
+            }
+          }
+        },
+        {
+          "name": "Get NOC Certificates by Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get NOC certificates by status successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('certificates');",
+                  "    pm.expect(jsonData).to.have.property('status');",
+                  "    pm.expect(jsonData.certificates).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/noc/status/active",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc", "status", "active"]
+            }
+          }
+        },
+        {
+          "name": "Get NOC Statistics",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get NOC statistics successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('statistics');",
+                  "    pm.expect(jsonData.statistics).to.have.property('total');",
+                  "    pm.expect(jsonData.statistics).to.have.property('statusBreakdown');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/noc/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Add Trade to NOC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Add trade to NOC successful', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('trade_id');",
+                  "    pm.collectionVariables.set('trade_id_noc', jsonData.trade_id);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\\n  \\\"trade_name\\\": \\\"Welder\\\",\\n  \\\"shift_1_units\\\": 24,\\n  \\\"shift_2_units\\\": 24\\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/noc/{{noc_id}}/trades",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc", "{{noc_id}}", "trades"]
+            }
+          }
+        },
+        {
+          "name": "Update NOC Trade",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Update NOC trade successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\\n  \\\"trade_name\\\": \\\"Advanced Welder\\\",\\n  \\\"shift_1_units\\\": 20,\\n  \\\"shift_2_units\\\": 20\\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/noc/trades/{{trade_id_noc}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc", "trades", "{{trade_id_noc}}"]
+            }
+          }
+        },
+        {
+          "name": "Remove Trade from NOC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Remove trade from NOC successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/noc/trades/{{trade_id_noc}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "noc", "trades", "{{trade_id_noc}}"]
+            }
+          }
         }
       ]
     }

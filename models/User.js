@@ -2,10 +2,11 @@ const { pool } = require('../config/database');
 const bcrypt = require('bcryptjs');
 
 class User {
-  constructor(name, email, password) {
+  constructor(name, email, password, phone_no) {
     this.name = name;
     this.email = email;
     this.password = password;
+    this.phone_no = phone_no;
   }
 
   // Create a new user
@@ -13,8 +14,8 @@ class User {
     try {
       const hashedPassword = await bcrypt.hash(this.password, 12);
       const [result] = await pool.execute(
-        'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
-        [this.name, this.email, hashedPassword]
+        'INSERT INTO users (name, email, password, phone_no) VALUES (?, ?, ?, ?)',
+        [this.name, this.email, hashedPassword, this.phone_no]
       );
       return result.insertId;
     } catch (error) {
@@ -26,7 +27,7 @@ class User {
   static async findAll() {
     try {
       const [rows] = await pool.execute(
-        'SELECT id, name, email, created_at, updated_at FROM users ORDER BY created_at DESC'
+        'SELECT id, name, email, phone_no, created_at, updated_at FROM users ORDER BY created_at DESC'
       );
       return rows;
     } catch (error) {
@@ -38,7 +39,7 @@ class User {
   static async findById(id) {
     try {
       const [rows] = await pool.execute(
-        'SELECT id, name, email, created_at, updated_at FROM users WHERE id = ?',
+        'SELECT id, name, email, phone_no, created_at, updated_at FROM users WHERE id = ?',
         [id]
       );
       return rows[0] || null;
@@ -51,7 +52,7 @@ class User {
   static async findByEmail(email) {
     try {
       const [rows] = await pool.execute(
-        'SELECT * FROM users WHERE email = ?',
+        'SELECT id, name, email, phone_no, password, created_at, updated_at FROM users WHERE email = ?',
         [email]
       );
       return rows[0] || null;
@@ -64,8 +65,8 @@ class User {
   static async update(id, name, email) {
     try {
       const [result] = await pool.execute(
-        'UPDATE users SET name = ?, email = ? WHERE id = ?',
-        [name, email, id]
+        'UPDATE users SET name = ?, email = ?, phone_no = ? WHERE id = ?',
+        [name, email, null, id]
       );
       return result.affectedRows > 0;
     } catch (error) {

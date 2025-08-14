@@ -1,41 +1,74 @@
 # Node.js CRUD Application with User Management
 
-A complete Node.js REST API application with CRUD operations for user management, including authentication, authorization, and database migrations.
+A complete Node.js REST API application with CRUD operations for user management, states management, and trades management, including authentication, authorization, and database migrations.
 
 ## Features
 
 - 🔐 User authentication (Register/Login) with JWT
-- 📝 Complete CRUD operations for users
+- 📝 Complete CRUD operations for users, states, and trades
 - 🗄️ MySQL database with migrations
 - 🔒 Password hashing with bcrypt
 - ✅ Input validation
 - 🛡️ JWT-based authorization
 - 📊 RESTful API design
+- 🔍 Search functionality for all entities
+- 📈 Statistics and analytics endpoints
+- 📄 Pagination support
+- 📧 Email services for password reset
+- 🔐 OTP verification system
+- 🖼️ Captcha verification
+- 📋 Comprehensive Postman collection
+- 📚 Detailed API documentation
 
 ## Project Structure
 
 ```
 curdwithlogin/
 ├── config/
-│   └── database.js          # Database configuration
+│   └── database.js                 # Database configuration
 ├── controllers/
-│   └── userController.js    # User controller logic
+│   ├── userController.js           # User controller logic
+│   ├── stateController.js          # State controller logic
+│   ├── tradeController.js          # Trade controller logic
+│   └── CaptchaController.js        # Captcha controller logic
 ├── middleware/
-│   ├── auth.js             # Authentication middleware
-│   └── validation.js       # Input validation middleware
+│   ├── auth.js                     # Authentication middleware
+│   └── validation.js               # Input validation middleware
 ├── migrations/
-│   ├── database-setup.js   # Database setup utilities
-│   ├── 001_create_users_table.js  # Users table migration
-│   ├── migrate.js          # Migration runner
-│   └── rollback.js         # Migration rollback
+│   ├── database-setup.js           # Database setup utilities
+│   ├── 001_create_users_table.js   # Users table migration
+│   ├── 002_add_password_reset_fields.js # Password reset fields
+│   ├── 003_create_captchas_table.js # Captcha table migration
+│   ├── 004_create_states_table.js  # States table migration
+│   ├── 005_create_trades_table.js  # Trades table migration
+│   ├── migrate.js                  # Migration runner
+│   └── rollback.js                 # Migration rollback
 ├── models/
-│   └── User.js             # User model
+│   ├── User.js                     # User model
+│   ├── State.js                    # State model
+│   ├── Trade.js                    # Trade model
+│   └── Captcha.js                  # Captcha model
 ├── routes/
-│   └── userRoutes.js       # User routes
-├── .env                    # Environment variables
-├── .gitignore             # Git ignore file
-├── package.json           # Project dependencies
-└── server.js              # Main server file
+│   ├── userRoutes.js               # User routes
+│   ├── stateRoutes.js              # State routes
+│   └── tradeRoutes.js              # Trade routes
+├── services/
+│   └── emailService.js             # Email service utilities
+├── public/
+│   ├── login.html                  # Login page
+│   └── reset-password.html         # Password reset page
+├── docs/
+│   ├── API_DOCUMENTATION.md        # User API documentation
+│   ├── OTP_API_DOCUMENTATION.md    # OTP API documentation
+│   ├── STATES_API_DOCUMENTATION.md # States API documentation
+│   ├── TRADES_API_DOCUMENTATION.md # Trades API documentation
+│   └── NOC_API_DOCUMENTATION.md    # NOC API documentation
+├── postman-collection.json         # Complete Postman collection
+├── POSTMAN_ROUTES.md               # Postman usage guide
+├── .env                            # Environment variables
+├── .gitignore                      # Git ignore file
+├── package.json                    # Project dependencies
+└── server.js                       # Main server file
 ```
 
 ## Prerequisites
@@ -158,6 +191,132 @@ DELETE /api/users/:id
 Authorization: Bearer <your_jwt_token>
 ```
 
+### States API
+
+#### Get All States
+```http
+GET /api/states
+```
+
+#### Get State by ID
+```http
+GET /api/states/:id
+```
+
+#### Create State (Protected)
+```http
+POST /api/states
+Authorization: Bearer <your_jwt_token>
+Content-Type: application/json
+
+{
+  "state_name": "California",
+  "logo": "https://example.com/california-flag.svg"
+}
+```
+
+#### Search States
+```http
+GET /api/states/search?q=california
+```
+
+### NOC (No Objection Certificate) API
+
+#### Get All NOC Certificates
+```http
+GET /api/noc
+```
+
+#### Get NOC Certificate by ID
+```http
+GET /api/noc/:id
+```
+
+#### Get NOC by Application Number
+```http
+GET /api/noc/application/:applicationNumber
+```
+
+#### Create NOC Certificate (Protected)
+```http
+POST /api/noc
+Authorization: Bearer <your_jwt_token>
+Content-Type: application/json
+
+{
+  "institute_name": "Test Technical Institute",
+  "complete_address": "123 Test Street, Test City, Test State - 123456",
+  "application_number": "NOC/2025/TTI/999",
+  "mis_code": "TTI999",
+  "category": "New ITI",
+  "state_name": "Test State",
+  "issue_date": "2025-08-08",
+  "expiry_date": "2026-08-07",
+  "status": "active",
+  "remarks": "Test NOC certificate",
+  "trades": [
+    {
+      "trade_name": "Electrician",
+      "shift_1_units": 24,
+      "shift_2_units": 0
+    }
+  ]
+}
+```
+
+#### Search NOC Certificates
+```http
+GET /api/noc/search?q=Delhi
+```
+
+#### Get NOC Statistics
+```http
+GET /api/noc/stats
+```
+
+#### Get NOC by State
+```http
+GET /api/noc/state/Maharashtra
+```
+
+#### Get NOC by Status
+```http
+GET /api/noc/status/active
+```
+
+### Trades API
+
+#### Get All Trades
+```http
+GET /api/trades
+```
+
+#### Get Trade by ID
+```http
+GET /api/trades/:id
+```
+
+#### Create Trade (Protected)
+```http
+POST /api/trades
+Authorization: Bearer <your_jwt_token>
+Content-Type: application/json
+
+{
+  "trade_name": "Software Developer"
+}
+```
+
+#### Search Trades
+```http
+GET /api/trades/search?q=mechanic
+```
+
+#### Get Trades Statistics
+```http
+GET /api/trades/stats
+```
+
 ## Database Schema
 
 ### Users Table
@@ -219,13 +378,70 @@ The API returns consistent error responses:
 - 🛡️ SQL injection prevention with parameterized queries
 - 🚫 Email uniqueness validation
 
+## API Documentation
+
+Comprehensive API documentation is available for all endpoints:
+
+- **User Management API**: [API_DOCUMENTATION.md](API_DOCUMENTATION.md)
+- **OTP & Email Services**: [OTP_API_DOCUMENTATION.md](OTP_API_DOCUMENTATION.md)  
+- **States Management API**: [STATES_API_DOCUMENTATION.md](STATES_API_DOCUMENTATION.md)
+- **Trades Management API**: [TRADES_API_DOCUMENTATION.md](TRADES_API_DOCUMENTATION.md)
+- **NOC Management API**: [NOC_API_DOCUMENTATION.md](NOC_API_DOCUMENTATION.md)
+
+## Postman Collection
+
+A complete Postman collection is provided with **25+ endpoints** covering all API functionality:
+
+### Import the Collection
+1. Open Postman
+2. Click "Import"
+3. Select the `postman-collection.json` file
+4. The collection includes all endpoints with:
+   - Pre-configured request examples
+   - Automatic token management
+   - Response validation tests
+   - Environment variables
+
+### Collection Features
+- ✅ **User Management**: Register, login, profile, CRUD operations
+- ✅ **Password Reset**: Email-based and URL token-based reset
+- ✅ **OTP Verification**: Send and verify OTP codes
+- ✅ **Captcha System**: Generate and verify captchas
+- ✅ **States Management**: Full CRUD with search and pagination
+- ✅ **Trades Management**: Full CRUD with search, statistics, and pagination
+- ✅ **NOC Management**: Complete certificate lifecycle with trade management
+- ✅ **Authentication**: Automatic JWT token handling
+- ✅ **Error Testing**: Invalid scenarios and edge cases
+
+### Usage Guide
+See [POSTMAN_ROUTES.md](POSTMAN_ROUTES.md) for detailed instructions on using the Postman collection.
+
+## Demo Data
+
+The application comes with pre-populated demo data:
+
+### States (20 US States)
+- California, Texas, Florida, New York, Pennsylvania, Illinois, Ohio, Georgia, North Carolina, Michigan, and more
+- Each state includes name and flag logo URL
+
+### Trades (40 Professional Trades)
+- Electrician, Plumber, Carpenter, Welder, HVAC Technician, Automotive Mechanic, and many more
+- Covers construction, mechanical, technical, and specialized trades
+
+### NOC Certificates (15 Certificates)
+- Covers various ITI establishments across multiple states
+- Categories include: New ITI, Addition of Trade Unit, Shifting, Relocation of Existing ITI
+- States covered: Delhi, Maharashtra, Karnataka, Tamil Nadu, West Bengal, Telangana, Gujarat, Rajasthan, Uttar Pradesh, and more
+- Each certificate includes associated trades with shift information
+- Status tracking: Active, Expired, Revoked certificates
+
 ## Testing the API
 
 ### Using curl
 
 1. **Register a new user:**
    ```bash
-   curl -X POST http://localhost:3000/api/users/register \
+   curl -X POST http://localhost:5050/api/users/register \
      -H "Content-Type: application/json" \
      -d '{"name":"John Doe","email":"john@example.com","password":"Password123"}'
    ```

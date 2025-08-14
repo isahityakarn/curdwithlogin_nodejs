@@ -4,6 +4,9 @@ require('dotenv').config();
 
 const { testConnection } = require('./config/database');
 const userRoutes = require('./routes/userRoutes');
+const stateRoutes = require('./routes/stateRoutes');
+const tradeRoutes = require('./routes/tradeRoutes');
+const nocRoutes = require('./routes/nocRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +18,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/states', stateRoutes);
+app.use('/api/trades', tradeRoutes);
+app.use('/api/noc', nocRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -29,14 +35,35 @@ app.get('/api/health', (req, res) => {
 // Root route
 app.get('/', (req, res) => {
   res.json({
-    message: 'Welcome to CRUD API with User Management',
+    message: 'Welcome to CRUD API with User Management, States & Trades',
     version: '1.0.0',
     endpoints: {
       health: '/api/health',
       users: '/api/users',
+      states: '/api/states',
+      trades: '/api/trades',
       auth: {
         register: 'POST /api/users/register',
         login: 'POST /api/users/login'
+      },
+      states_endpoints: {
+        getAllStates: 'GET /api/states',
+        getStateById: 'GET /api/states/:id',
+        createState: 'POST /api/states (auth required)',
+        updateState: 'PUT /api/states/:id (auth required)',
+        deleteState: 'DELETE /api/states/:id (auth required)',
+        searchStates: 'GET /api/states/search?q=term',
+        getStats: 'GET /api/states/stats'
+      },
+      trades_endpoints: {
+        getAllTrades: 'GET /api/trades',
+        getTradeById: 'GET /api/trades/:id',
+        createTrade: 'POST /api/trades (auth required)',
+        updateTrade: 'PUT /api/trades/:id (auth required)',
+        deleteTrade: 'DELETE /api/trades/:id (auth required)',
+        searchTrades: 'GET /api/trades/search?q=term',
+        getFeatured: 'GET /api/trades/featured',
+        getStats: 'GET /api/trades/stats'
       }
     }
   });
