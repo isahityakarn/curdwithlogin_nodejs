@@ -1,7 +1,25 @@
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
+
+
 class EmailService {
+  async sendEmail(to, subject, text) {
+    const mailOptions = {
+      from: process.env.EMAIL_FROM,
+      to: to,
+      subject: subject,
+      text: text
+    };
+    try {
+      const info = await this.transporter.sendMail(mailOptions);
+      console.log('Email sent:', info.messageId);
+      return { success: true, messageId: info.messageId };
+    } catch (error) {
+      console.error('Email sending error:', error);
+      return { success: false, error: error.message };
+    }
+  }
   constructor() {
     this.transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
@@ -14,6 +32,22 @@ class EmailService {
     });
   }
 
+  async sendEmail(to, subject, text) {
+    const mailOptions = {
+      from: process.env.EMAIL_FROM,
+      to: to,
+      subject: subject,
+      text: text
+    };
+    try {
+      const info = await this.transporter.sendMail(mailOptions);
+      console.log('Email sent:', info.messageId);
+      return { success: true, messageId: info.messageId };
+    } catch (error) {
+      console.error('Email sending error:', error);
+      return { success: false, error: error.message };
+    }
+  }
   async sendPasswordResetEmail(to, resetToken, userName) {
     const resetUrl = `${process.env.REACT_APP_URL}/reset-password?token=${resetToken}`;
 

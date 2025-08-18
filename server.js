@@ -21,6 +21,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/states', stateRoutes);
 app.use('/api/trades', tradeRoutes);
 app.use('/api/noc', nocRoutes);
+app.use('/api/login', require('./routes/loginRoutes'));
 
 // Health check route
 app.get('/api/health', (req, res) => {

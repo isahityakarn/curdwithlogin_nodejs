@@ -1,0 +1,77 @@
+{
+  "info": {
+    "name": "CRUD with Login API - Complete Collection",
+    "description": "Complete API collection for Node.js CRUD application with user authentication, password reset, OTP verification, and captcha verification",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "2.0.0"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5050", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "captcha_token", "value": "", "type": "string" },
+    { "key": "reset_token", "value": "", "type": "string" },
+    { "key": "user_id", "value": "1", "type": "string" },
+    { "key": "state_id", "value": "1", "type": "string" },
+    { "key": "trade_id", "value": "1", "type": "string" },
+    { "key": "noc_id", "value": "1", "type": "string" },
+    { "key": "trade_id_noc", "value": "1", "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{token}}", "type": "string" }
+    ]
+  },
+  "item": [
+    {
+      "name": "🔐 Authentication Routes",
+      "description": "User registration and login endpoints",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\",\n  \"phone_no\": \"9876543210\"\n}" },
+            "url": { "raw": "{{base_url}}/api/users/register", "host": ["{{base_url}}"], "path": ["api", "users", "register"] },
+            "description": "Register a new user with name, email, password, and phone_no"
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\"\n}" },
+            "url": { "raw": "{{base_url}}/api/users/login", "host": ["{{base_url}}"], "path": ["api", "users", "login"] },
+            "description": "Login with email and password to get authentication token"
+          },
+          "response": []
+        },
+        {
+          "name": "Login with OTP",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"john@example.com\"\n}" },
+            "url": { "raw": "{{base_url}}/api/login/loginwithotp", "host": ["{{base_url}}"], "path": ["api", "login", "loginwithotp"] },
+            "description": "Send OTP to user's email or phone. Body: { email: string } or { phone: string }"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Login OTP",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"john@example.com\",\n  \"otp\": \"123456\"\n}" },
+            "url": { "raw": "{{base_url}}/api/login/verifylogin", "host": ["{{base_url}}"], "path": ["api", "login", "verifylogin"] },
+            "description": "Verify OTP for login. Body: { email: string, otp: string } or { phone: string, otp: string }"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -48,13 +48,21 @@ class User {
     }
   }
 
-  // Find user by email (for authentication)
-  static async findByEmail(email) {
+  // Find user by email or phone (for login/OTP)
+  static async findOne({ email, phone }) {
     try {
-      const [rows] = await pool.execute(
-        'SELECT id, name, email, phone_no, password, created_at, updated_at FROM users WHERE email = ?',
-        [email]
-      );
+      let query = 'SELECT id, name, email, phone_no, password, created_at, updated_at FROM users WHERE ';
+      let value;
+      if (email) {
+        query += 'email = ?';
+        value = email;
+      } else if (phone) {
+        query += 'phone_no = ?';
+        value = phone;
+      } else {
+        throw new Error('Email or phone required');
+      }
+      const [rows] = await pool.execute(query, [value]);
       return rows[0] || null;
     } catch (error) {
       throw error;
