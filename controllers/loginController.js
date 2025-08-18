@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 
 const otpStore = {};
 const User = require('../models/User');
@@ -36,7 +37,7 @@ exports.loginWithOtp = async (req, res) => {
             // Assuming you have a function to send SMS
             await smsService.sendSms(phone, `Your OTP is ${otp}`);
         }
-        res.json({ message: 'OTP sent.' });
+    res.json({ message: 'OTP sent.' });
     } catch (err) {
         console.error('Error in loginWithOtp:', err);
         res.status(500).json({ message: 'Internal server error', error: err.message });
@@ -60,7 +61,28 @@ exports.verifyLogin = async (req, res) => {
             'UPDATE users SET reset_token = NULL WHERE email = ? OR phone_no = ?',
             [email || null, phone || null]
         );
-        res.json({ message: 'Login successful.' });
+        // Fetch user details for token
+        const user = await User.findOne({ email, phone });
+        const token = jwt.sign(
+            {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                phone_no: user.phone_no
+            },
+            process.env.JWT_SECRET || 'your_jwt_secret',
+            { expiresIn: '1h' }
+        );
+        res.json({
+            message: 'Login successful.',
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                phone_no: user.phone_no
+            }
+        });
     } else {
         res.status(401).json({ message: 'Invalid OTP.' });
     }
