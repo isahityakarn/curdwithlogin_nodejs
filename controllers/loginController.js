@@ -16,13 +16,13 @@ exports.loginWithOtp = async (req, res) => {
     const { phone, email } = req.body;
     const identifier = phone || email;
     if (!identifier) {
-        return res.status(400).json({ message: 'Phone or email required.' });
+        return res.status(400).json({ success: false, message: 'Phone or email required.' });
     }
     let user;
     try {
         user = await User.findOne({ email, phone });
         if (!user) {
-            return res.status(404).json({ message: 'User not found.' });
+            return res.status(404).json({ success: false, message: 'User not found.' });
         }
         const otp = generateOTP();
         const { pool } = require('../config/database');
@@ -37,10 +37,10 @@ exports.loginWithOtp = async (req, res) => {
             // Assuming you have a function to send SMS
             await smsService.sendSms(phone, `Your OTP is ${otp}`);
         }
-    res.json({ message: 'OTP sent.' });
+    res.status(200).json({ success: true, message: 'OTP sent.' });
     } catch (err) {
         console.error('Error in loginWithOtp:', err);
-        res.status(500).json({ message: 'Internal server error', error: err.message });
+        res.status(500).json({ success: false, message: 'Internal server error', error: err.message });
     }
 };
 
